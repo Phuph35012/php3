@@ -7,7 +7,35 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
-    function showUser(){
+    public function listUsers(){
+        $listUsers = DB::table('users')
+        ->join('phongban','phongban.id','=','users.phongban_id')
+        -> select('users.id','users.name','users.email','users.phongban_id','phongban.ten_donvi')
+        ->get();
+        return view('users/listUsers')->with(['listUsers' => $listUsers]);
+    }
+    public function addUsers(){
+        $phongBan = DB::table('phongban')->select('id','ten_donvi')->get();
+        return view('users/addUsers')->with(['phongBan' => $phongBan]);
+    }
+    public function postUsers(Request $req){
+        $data=[
+                'name' => $req->nameUsers,
+                'email' => $req->emailUsers,
+                'phongban_id' => $req->phongbanUser,
+                'tuoi' => $req->tuoiUsers,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+        ];
+        DB::table('users')->insert($data);
+        return redirect()->route('users.listUsers');
+
+}
+public function deleteUser($idUser){
+   DB::table('users')->where('id',$idUser)->delete();
+   return redirect()->route('users.listUsers');
+}
+    // function showUser(){
         // $users = [
         //     [
         //         'id' => '1',
@@ -127,21 +155,21 @@ class UserController extends Controller
 
         //Xóa user nghỉ quá 15 ngày
         //DB::table('users')->where('songaynghi', '>', '15')->delete();
-    }
-    function getUser($id,$name = ''){
-        echo $id;
-        echo $name;
-    }
-    function updateUser(Request $request){
-        echo $request->id;
-    }
-    function thongTinSv(){
+    // }
+    // function getUser($id,$name = ''){
+    //     echo $id;
+    //     echo $name;
+    // }
+    // function updateUser(Request $request){
+    //     echo $request->id;
+    // }
+    // function thongTinSv(){
             
-            $id = 'ph35012';
-            $name = 'Ly Quang Phu';
-            $tuoi = '21';
-            $chuyen_nganh = 'lap trinh web';
+    //         $id = 'ph35012';
+    //         $name = 'Ly Quang Phu';
+    //         $tuoi = '21';
+    //         $chuyen_nganh = 'lap trinh web';
         
-        return view('list-user',compact('id','name','tuoi','chuyen_nganh'));
-    }
+    //     return view('list-user',compact('id','name','tuoi','chuyen_nganh'));
+    // }
 }
