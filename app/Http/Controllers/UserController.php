@@ -31,10 +31,27 @@ class UserController extends Controller
         return redirect()->route('users.listUsers');
 
 }
-public function deleteUser($idUser){
-   DB::table('users')->where('id',$idUser)->delete();
-   return redirect()->route('users.listUsers');
-}
+    public function deleteUser($idUser){
+    DB::table('users')->where('id',$idUser)->delete();
+    return redirect()->route('users.listUsers');
+    }
+
+    public function editUser($idUser){
+        $phongBan = DB::table('phongban')->select('id','ten_donvi')->get();
+        $user = DB::table('users')->where('id', $idUser)->first();
+        return view('users/editUsers',compact('user','phongBan'));
+    }
+    public function updateUser(Request $req, $idUser){
+        $data=[
+                'name' => $req->nameUser,
+                'email' => $req->emailUser,
+                'phongban_id' => $req->phongbanUser,
+                'tuoi' => $req->tuoiUser,
+                'updated_at' => Carbon::now(),
+        ];
+        DB::table('users')->where('id', $idUser)->update($data);
+        return redirect()->route('users.listUsers');
+    }
     // function showUser(){
         // $users = [
         //     [

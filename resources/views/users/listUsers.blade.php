@@ -31,6 +31,7 @@
                     <a href="{{ route('users.deleteUser',$value->id)}}"   
                     onclick="return confirm('Are you sure you want to delete?');" >
                     XOA</a>
+                    <a href="{{route('users.editUser',$value->id)}}">SUA</a>
                 </td>
             </tr>
             @endforeach
